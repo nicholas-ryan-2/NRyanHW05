@@ -8,15 +8,16 @@
 
 import UIKit
 
-class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource, UITextFieldDelegate {
     @IBOutlet weak var resultMessage: UITextField!
     @IBOutlet weak var textInput: UITextField!
     @IBOutlet weak var fromUnitsLabel: UILabel!
     @IBOutlet weak var formulaPicker: UIPickerView!
     
+    @IBOutlet weak var posNegController: UISegmentedControl!
     @IBOutlet weak var decimalSegment: UISegmentedControl!
     
-    var formulasArray = ["miles to kilometers", "kilometers to miles", "feet to meters", "yards to meters", "meters to feet", "meters to yards"]
+    var formulasArray = ["miles to kilometers", "kilometers to miles", "feet to meters", "yards to meters", "meters to feet", "meters to yards", "inches to centimeters", "centimeters to inches", "farenheit to celsius", "celsius to farenheit", "quarts to liters", "liters to quarts"]
     var toUnits = ""
     var conversionString = ""
     var fromUnits = ""
@@ -40,6 +41,18 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
                 outputValue = inputValue / 1.0936
             case "meters to yards":
                 outputValue = inputValue * 1.0936
+            case "inches to centimeters":
+                outputValue = inputValue / 0.39370
+            case "centimeters to inches":
+                outputValue = inputValue * 0.39370
+            case "farenheit to celsius":
+                outputValue = (inputValue - 32) * 5 / 9
+            case "celsius to farenheit":
+                outputValue = inputValue * 9 / 5 + 32
+            case "quarts to liters":
+                outputValue = inputValue / 1.05669
+            case "liters to quarts":
+                outputValue = inputValue * 1.05669
             default:
                 showAlert()}
         } else {
@@ -59,10 +72,15 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         formulaPicker.dataSource = self
         formulaPicker.delegate = self
         super.viewDidLoad()
+        textInput.delegate = self
+        textInput.becomeFirstResponder()
         conversionString = "miles to kilometers"
         // Do any additional setup after loading the view, typically from a nib.
     }
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+textInput.resignFirstResponder()
+        return true
+    }
 //MARK:- Required functions
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
@@ -74,7 +92,14 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         return formulasArray[row]
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        
+        if conversionString == "farenheit to celsius" || conversionString == "celsius to farenheit"  {
+            posNegController.isHidden = false
+        } else {
+            posNegController.isHidden = true
+            textInput.text = textInput.text!.replacingOccurrences(of: "-", with: "")
+            posNegController.selectedSegmentIndex = 0
+
+        }
         let unitsArray = formulasArray[row].components(separatedBy: " to ")
         conversionString = formulasArray[row]
         
@@ -82,7 +107,9 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         fromUnitsLabel.text = fromUnits
         toUnits = unitsArray[1]
         resultMessage.text = toUnits
-        calculateConversion()
+        if textInput.text?.characters.count != 0 {
+            calculateConversion()
+    }
     }
 
 
@@ -111,5 +138,16 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
     }
  
+    @IBAction func posNegAction(_ sender: UISegmentedControl) {
 
+        if posNegController.selectedSegmentIndex == 1 {
+            textInput.text = "-" + textInput.text!
+        } else {
+        textInput.text = textInput.text!.replacingOccurrences(of: "-", with: "")
+        posNegController.selectedSegmentIndex = 0
+        }
+        if textInput.text != "-" {
+        calculateConversion()
+    }
+}
 }

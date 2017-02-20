@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="miles" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zCF-t8-Rb5">
-                                <rect key="frame" x="263" y="39" width="96" height="21"/>
+                                <rect key="frame" x="263" y="39.5" width="96" height="20.5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="96" id="EDq-GM-0CC"/>
                                 </constraints>
@@ -44,13 +44,13 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select Conversion" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XoS-yj-dx1">
-                                <rect key="frame" x="87" y="106" width="201" height="21"/>
+                                <rect key="frame" x="87" y="106" width="201" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AUA-Nq-lCv">
-                                <rect key="frame" x="87" y="389" width="201" height="30"/>
+                                <rect key="frame" x="87" y="388.5" width="201" height="30"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -60,13 +60,13 @@
                                 </connections>
                             </button>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qHe-co-7MR">
-                                <rect key="frame" x="16" y="142" width="343" height="174"/>
+                                <rect key="frame" x="16" y="141.5" width="343" height="174"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="174" id="us4-ve-S1o"/>
                                 </constraints>
                             </pickerView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="DCJ-dB-lme">
-                                <rect key="frame" x="44" y="353" width="286" height="28"/>
+                                <rect key="frame" x="44" y="352.5" width="286" height="28"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="af9-lp-c2s">
                                         <rect key="frame" x="0.0" y="0.0" width="286" height="28"/>
@@ -94,6 +94,17 @@
                                     </stackView>
                                 </subviews>
                             </stackView>
+                            <segmentedControl hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="79e-Lx-a71">
+                                <rect key="frame" x="16" y="36" width="43" height="29"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <segments>
+                                    <segment title="+"/>
+                                    <segment title="-"/>
+                                </segments>
+                                <connections>
+                                    <action selector="posNegAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="gZ4-JL-ZVv"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" red="0.80000001190000003" green="0.80000001190000003" blue="0.80000001190000003" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
@@ -122,6 +133,7 @@
                         <outlet property="decimalSegment" destination="Oen-LB-VJc" id="nPm-ik-9aS"/>
                         <outlet property="formulaPicker" destination="qHe-co-7MR" id="aRY-xV-TtU"/>
                         <outlet property="fromUnitsLabel" destination="zCF-t8-Rb5" id="Pht-eu-JLs"/>
+                        <outlet property="posNegController" destination="79e-Lx-a71" id="iYU-pS-5it"/>
                         <outlet property="resultMessage" destination="jtm-o9-wBO" id="WWq-4Q-WyP"/>
                         <outlet property="textInput" destination="tvU-Hg-nlK" id="aDx-Pv-r2G"/>
                     </connections>
