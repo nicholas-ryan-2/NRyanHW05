@@ -16,47 +16,37 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
     
     @IBOutlet weak var posNegController: UISegmentedControl!
     @IBOutlet weak var decimalSegment: UISegmentedControl!
-    
-    var formulasArray = ["miles to kilometers", "kilometers to miles", "feet to meters", "yards to meters", "meters to feet", "meters to yards", "inches to centimeters", "centimeters to inches", "farenheit to celsius", "celsius to farenheit", "quarts to liters", "liters to quarts"]
     var toUnits = ""
     var conversionString = ""
     var fromUnits = ""
     var outputString = ""
+    var rowSelected = 0
+    
+    struct Formula {
+        var conversionString: String
+        var formula: (Double) -> Double
+    }
+    
+    let formulasArray = [Formula(conversionString: "miles to kilometers", formula: {$0 / 0.62137}),
+                        Formula(conversionString: "kilometers to miles", formula: {$0 * 0.62137}),
+                        Formula(conversionString: "feet to meters", formula: {$0 / 3.2808}),
+                        Formula(conversionString: "meters to feet", formula: {$0 * 3.2808}),
+                        Formula(conversionString: "yards to meters", formula: {$0 / 1.0936}),
+                        Formula(conversionString: "meters to yards", formula: {$0 * 1.0936}),
+                        Formula(conversionString: "inches to centimeters", formula: {$0 / 0.39370}),
+                        Formula(conversionString: "centimeters to inches", formula: {$0 * 0.39370}),
+                        Formula(conversionString: "celsius to farenheit", formula: {$0 * 9 / 5 + 32}),
+                        Formula(conversionString: "farenheit to celsius", formula: {($0 - 32) * 5 / 9}),
+                        Formula(conversionString: "quarts to liters", formula: {$0 / 1.05669}),
+                        Formula(conversionString: "liters to quarts", formula: {$0 * 1.05669})]
     
     func calculateConversion() {
         var inputValue = textInput.text
         var outputValue = 0.0
-        
         if let inputValue = Double(textInput.text!) {
-            switch conversionString {
-            case "miles to kilometers":
-                outputValue = inputValue / 0.62137
-            case "kilometers to miles":
-                outputValue = inputValue * 0.62137
-            case "feet to meters":
-                outputValue = inputValue / 3.2808
-            case "meters to feet":
-                outputValue = inputValue * 3.2808
-            case "yards to meters":
-                outputValue = inputValue / 1.0936
-            case "meters to yards":
-                outputValue = inputValue * 1.0936
-            case "inches to centimeters":
-                outputValue = inputValue / 0.39370
-            case "centimeters to inches":
-                outputValue = inputValue * 0.39370
-            case "farenheit to celsius":
-                outputValue = (inputValue - 32) * 5 / 9
-            case "celsius to farenheit":
-                outputValue = inputValue * 9 / 5 + 32
-            case "quarts to liters":
-                outputValue = inputValue / 1.05669
-            case "liters to quarts":
-                outputValue = inputValue * 1.05669
-            default:
-                showAlert()}
+            outputValue = formulasArray[rowSelected].formula(inputValue)
         } else {
-            self.showAlert()
+            self.showAlert(title: "Error", message: "Please enter a valid number. Not an empty string, no commas, symbols, or non-numeric characters")
             }
         if decimalSegment.selectedSegmentIndex != 3{
         outputString = String(format: "%." + String(decimalSegment.selectedSegmentIndex+1) + "f",outputValue)
@@ -66,6 +56,15 @@ class ViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSo
         
     resultMessage.text = "\(textInput.text!) \(fromUnits) equals \(outputString) \(toUnits)"
     }
+    
+    func assignUnits() {
+        let unitsArray = conversionString.components(separatedBy: " to ")
+        fromUnits = unitsArray[0]
+        fromUnitsLabel.text = fromUnits
+        toUnits = unitsArray[1]
+        resultMessage.text = toUnits
+    }
+    
     
 //MARK:- Delegates and Data Sources
     override func viewDidLoad() {
@@ -89,7 +88,7 @@ textInput.resignFirstResponder()
         return formulasArray.count
     }
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return formulasArray[row]
+        return formulasArray[row].conversionString
     }
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         if conversionString == "farenheit to celsius" || conversionString == "celsius to farenheit"  {
@@ -100,13 +99,9 @@ textInput.resignFirstResponder()
             posNegController.selectedSegmentIndex = 0
 
         }
-        let unitsArray = formulasArray[row].components(separatedBy: " to ")
-        conversionString = formulasArray[row]
-        
-        fromUnits = unitsArray[0]
-        fromUnitsLabel.text = fromUnits
-        toUnits = unitsArray[1]
-        resultMessage.text = toUnits
+        rowSelected = row
+        conversionString = formulasArray[row].conversionString
+        assignUnits()
         if textInput.text?.characters.count != 0 {
             calculateConversion()
     }
@@ -118,8 +113,8 @@ textInput.resignFirstResponder()
         // Dispose of any resources that can be recreated.
     }
     
-    func showAlert() {
-        let alertController = UIAlertController(title: "Entry Error", message: "Please enter a valid number. Not an empty string, no commas, symbols, or non-numeric characters", preferredStyle: .alert)
+    func showAlert(title: String, message: String) {
+        let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let defaultAction = UIAlertAction(title: "OK", style: .default, handler: nil
         )
         alertController.addAction(defaultAction)
